@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Business Listings</title>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    .card { border: 1px solid #ccc; border-radius: 10px; padding: 1em; width: 250px; margin: 10px; background: #fff; cursor: pointer; }
-    .grid { display: flex; flex-wrap: wrap; gap: 10px; }
-    .detail { margin-top: 20px; }
-    #backBtn { cursor: pointer; color: blue; text-decoration: underline; margin-bottom: 10px; display: none; }
-    select { margin: 10px 0; padding: 5px; }
+    body { font-family: sans-serif; padding: 20px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin: 10px; width: 300px; display: inline-block; vertical-align: top; background: #fdfdfd; }
+    .card img { width: 100%; border-radius: 6px; }
+    .detail { max-width: 600px; margin: auto; }
+    #detail-container { display: none; }
+    #back-button { margin-bottom: 1em; cursor: pointer; color: blue; }
   </style>
 </head>
 <body>
-  <h1>Business Listings</h1>
-
-  <label for="industryFilter">Filter by Industry:</label>
-  <select id="industryFilter">
-    <option value="All">All</option>
-  </select>
-
-  <label for="sortSelect">Sort by Price:</label>
-  <select id="sortSelect">
-    <option value="asc">Low to High</option>
-    <option value="desc">High to Low</option>
-  </select>
-
-  <div id="backBtn" onclick="goBack()">← Back to Listings</div>
-  <div id="listing-container" class="grid"></div>
-  <div id="detail-container" style="display:none;"></div>
+  <div id="listing-container"></div>
+  <div id="detail-container"></div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
@@ -41,77 +32,57 @@
       storageBucket: "buildthebuisnessmarketplace.appspot.com",
       messagingSenderId: "925773535893",
       appId: "1:925773535893:web:6572609247d9851866599c",
-      measurementId: "G-W35X960PF1",
-      databaseURL: "https://buildthebuisnessmarketplace-default-rtdb.firebaseio.com"
+      measurementId: "G-W35X960PF1"
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const db = getFirestore(app);
 
     let listings = [];
 
     async function fetchListings() {
-      const snapshot = await get(ref(db, 'listings'));
-      if (snapshot.exists()) {
-        listings = Object.values(snapshot.val());
-        populateFilters();
+      const querySnapshot = await getDocs(collection(db, "listings"));
+      listings = [];
+      querySnapshot.forEach(doc => {
+        listings.push({ id: doc.id, ...doc.data() });
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id !== null) {
+        showDetail(id);
+      } else {
         showIndex();
       }
     }
 
-    function populateFilters() {
-      const select = document.getElementById("industryFilter");
-      const industries = [...new Set(listings.map(l => l.Industry))];
-      industries.forEach(ind => {
-        const option = document.createElement("option");
-        option.value = ind;
-        option.textContent = ind;
-        select.appendChild(option);
-      });
-    }
-
     function showIndex() {
-      const container = document.getElementById("listing-container");
-      const detail = document.getElementById("detail-container");
-      const back = document.getElementById("backBtn");
-      detail.style.display = "none";
-      container.style.display = "flex";
-      back.style.display = "none";
-
-      container.innerHTML = "";
-
-      const filter = document.getElementById("industryFilter").value;
-      const sort = document.getElementById("sortSelect").value;
-
-      let filtered = filter === "All" ? listings : listings.filter(l => l.Industry === filter);
-
-      if (sort === "asc") filtered.sort((a, b) => a.Price - b.Price);
-      else filtered.sort((a, b) => b.Price - a.Price);
-
-      filtered.forEach((item, index) => {
-        const card = document.createElement("div");
-        card.className = "card";
+      const container = document.getElementById('listing-container');
+      container.innerHTML = '<h1>Business Listings</h1>';
+      listings.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <img src="${item.Image}" alt="Image" style="width:100%; border-radius:8px;">
+          <img src="${item.Image}" alt="Business Image" />
           <h3>${item.Name}</h3>
           <p><strong>Price:</strong> $${item.Price}</p>
           <p><strong>Industry:</strong> ${item.Industry}</p>
+          <a href="?id=${item.id}">More Details</a>
         `;
-        card.onclick = () => showDetail(item);
         container.appendChild(card);
       });
     }
 
-    function showDetail(item) {
-      const container = document.getElementById("detail-container");
-      document.getElementById("listing-container").style.display = "none";
-      document.getElementById("backBtn").style.display = "block";
-      container.style.display = "block";
-
+    function showDetail(id) {
+      const item = listings.find(x => x.id === id);
+      document.getElementById('listing-container').style.display = 'none';
+      const container = document.getElementById('detail-container');
+      container.style.display = 'block';
       container.innerHTML = `
+        <div id="back-button" onclick="goBack()">← Back to Listings</div>
         <div class="detail">
+          <img src="${item.Image}" alt="Business Image" />
           <h2>${item.Name}</h2>
-          <img src="${item.Image}" style="width:100%; max-width:600px; border-radius:8px;">
           <p><strong>Price:</strong> $${item.Price}</p>
           <p><strong>Location:</strong> ${item.Location}</p>
           <p><strong>Industry:</strong> ${item.Industry}</p>
@@ -121,12 +92,12 @@
       `;
     }
 
-    function goBack() {
+    window.goBack = function () {
+      history.pushState({}, "", window.location.pathname);
+      document.getElementById('detail-container').style.display = 'none';
+      document.getElementById('listing-container').style.display = 'block';
       showIndex();
-    }
-
-    document.getElementById("industryFilter").onchange = showIndex;
-    document.getElementById("sortSelect").onchange = showIndex;
+    };
 
     fetchListings();
   </script>
