@@ -1,103 +1,53 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>List Your Business</title>
+  <meta charset="UTF-8">
+  <title>Submit Your Listing</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      background: #f9f9f9;
-    }
-    form {
-      background: white;
-      padding: 2em;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
-    }
-    input, textarea, select {
-      width: 100%;
-      margin-bottom: 1em;
-      padding: 0.75em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      padding: 0.75em 1.5em;
-      background: #0073aa;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #005f8d;
-    }
+    form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    input, textarea { padding: 8px; font-size: 1em; }
+    button { padding: 10px; background: green; color: white; border: none; font-size: 1em; cursor: pointer; }
   </style>
 </head>
 <body>
+  <h1>Submit Your Business Listing</h1>
+  <form id="listingForm">
+    <input name="Name" placeholder="Business Name" required />
+    <input name="Price" placeholder="Price" type="number" required />
+    <input name="Location" placeholder="Location" required />
+    <input name="Industry" placeholder="Industry" required />
+    <input name="Condition" placeholder="Condition (e.g., New/Used)" required />
+    <textarea name="Description" placeholder="Short Description" required></textarea>
+    <input name="Image" placeholder="Image URL" required />
+    <button type="submit">Submit</button>
+  </form>
 
-<h2 style="text-align: center;">List Your Business</h2>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-<form id="listingForm">
-  <input type="text" placeholder="Business Name" id="name" required />
-  <input type="text" placeholder="Industry" id="industry" required />
-  <input type="text" placeholder="Location" id="location" required />
-  <input type="number" placeholder="Price (USD)" id="price" required />
-  <input type="text" placeholder="Condition (e.g., New, Good)" id="condition" required />
-  <textarea placeholder="Short Description" id="description" required></textarea>
-  <input type="url" placeholder="Image URL" id="image" required />
-  <button type="submit">Submit Listing</button>
-</form>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-<script>
-  // TODO: Replace with your own Firebase config
-  
-const firebaseConfig = {
-  apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
-  authDomain: "buildthebuisnessmarketplace.firebaseapp.com",
-  projectId: "buildthebuisnessmarketplace",
-  storageBucket: "buildthebuisnessmarketplace.firebasestorage.app",
-  messagingSenderId: "925773535893",
-  appId: "1:925773535893:web:6572609247d9851866599c",
-  measurementId: "G-W35X960PF1"
-};
-
-  // Init Firebase
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-
-  const form = document.getElementById('listingForm');
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const listing = {
-      Name: document.getElementById('name').value,
-      Industry: document.getElementById('industry').value,
-      Location: document.getElementById('location').value,
-      Price: document.getElementById('price').value,
-      Condition: document.getElementById('condition').value,
-      Description: document.getElementById('description').value,
-      Image: document.getElementById('image').value,
-      timestamp: Date.now()
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
+      authDomain: "buildthebuisnessmarketplace.firebaseapp.com",
+      projectId: "buildthebuisnessmarketplace",
+      storageBucket: "buildthebuisnessmarketplace.appspot.com",
+      messagingSenderId: "925773535893",
+      appId: "1:925773535893:web:6572609247d9851866599c",
+      measurementId: "G-W35X960PF1",
+      databaseURL: "https://buildthebuisnessmarketplace-default-rtdb.firebaseio.com"
     };
 
-    // Push to Firebase
-    database.ref('listings').push(listing)
-      .then(() => {
-        alert('Listing submitted!');
-        form.reset();
-      })
-      .catch(err => alert('Error: ' + err.message));
-  });
-</script>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
+    document.getElementById("listingForm").onsubmit = async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      data.Price = parseFloat(data.Price);
+      await push(ref(db, 'listings'), data);
+      alert("Listing submitted!");
+      e.target.reset();
+    };
+  </script>
 </body>
 </html>
