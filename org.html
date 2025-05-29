@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BizMarket - Professional Business Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fafbfc;
+      color: #1a202c;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    nav a {
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    nav a:hover, nav a.active {
+      color: #2563eb;
+      background: rgba(37, 99, 235, 0.08);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* Page Container */
+    .page {
+      display: none;
+      min-height: calc(100vh - 200px);
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    /* Home Page Styles */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.5;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff, #e2e8f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 3rem;
+      color: #cbd5e1;
+      font-weight: 300;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-hero {
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+    }
+    
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /* Section Styles */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-top: 4rem;
+    }
+    
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* About Page Styles */
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+    
+    .about-text {
+      font-size: 1.1rem;
+      color: #4a5568;
+      margin-bottom: 2rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .feature-icon {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .feature-text {
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .about-visual {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .placeholder-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+      border-radius: 20px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 2rem;
+    }
+    
+    /* Listings Page Styles */
+    .listings-container {
+      padding: 2rem 0 4rem;
+    }
+    
+    .listings-filters {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .filter-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .listing-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .listing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .listing-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+    }
+    
+    .listing-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 1rem;
+    }
+    
+    .listing-description {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Dashboard Page Styles */
+    .dashboard-container {
+      padding: 2rem 0 4rem;
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .dashboard-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+    }
+    
+    .card-description {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Login Page Styles */
+    .login-container {
+      padding: 4rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60vh;
+    }
+    
+    .login-form {
+      max-width: 400px;
+      width: 100%;
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .login-title {
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 2rem;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #fafbfc;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      padding: 0.875rem 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #cbd5e1;
+      padding: 3rem 0 2rem;
+      text-align: center;
+      margin-top: 5rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      nav {
+        gap: 1rem;
+      }
+      
+      nav a {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .hero {
+        padding: 4rem 1rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-grid, .listings-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo" onclick="showPage('home')">BizMarket</div>
+      <nav>
+        <a onclick="showPage('home')" class="nav-link active">Home</a>
+        <a onclick="showPage('about')" class="nav-link">About</a>
+        <a onclick="showPage('listings')" class="nav-link">Browse</a>
+        <a onclick="showPage('dashboard')" class="nav-link">Dashboard</a>
+        <button onclick="showPage('login')" class="btn-primary">Login</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME PAGE -->
+  <div id="home" class="page active">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Find or Sell Your Business Today</h1>
+        <p>The premier marketplace connecting entrepreneurs with verified opportunities across the globe. Start your journey with confidence.</p>
+        <div class="hero-buttons">
+          <button onclick="showPage('listings')" class="btn-hero btn-hero-primary">Browse Listings</button>
+          <button onclick="showPage('about')" class="btn-hero btn-hero-secondary">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT PAGE -->
+  <div id="about" class="page">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Why Choose BizMarket?</h2>
+        <p class="section-subtitle">The trusted platform where serious entrepreneurs connect, backed by industry-leading security and support.</p>
+      </div>
+      
+      <div class="about-content">
+        <div>
+          <p class="about-text">BizMarket is the premier destination for buying and selling businesses. Whether you're a startup founder, seasoned entrepreneur, or strategic investor, we provide the tools and connections you need to succeed.</p>
+          
+          <div class="features-grid">
+            <div class="feature-item">
+              <div class="feature-icon"></div>
+              <span class="feature-text">Comprehensive seller dashboard</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"></div>
+              <span class="feature-text">Secure encrypted messaging</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"></div>
+              <span class="feature-text">Streamlined listing process</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon"></div>
+              <span class="feature-text">Verified buyer & seller accounts</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="about-visual">
+          <div class="placeholder-icon">📊</div>
+          <h3>Professional Analytics</h3>
+          <p>Get detailed insights and market data to make informed decisions about your business transactions.</p>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <div class="about-visual">
+          <div class="placeholder-icon">🔒</div>
+          <h3>Enterprise Security</h3>
+          <p>Bank-level encryption and verification processes ensure your sensitive business information stays protected.</p>
+        </div>
+        
+        <div>
+          <h3 style="margin-bottom: 1rem; color: #1a202c;">Our Mission</h3>
+          <p class="about-text">We believe that every entrepreneur deserves access to quality business opportunities and the tools to make informed decisions. Our platform bridges the gap between buyers and sellers with transparency, security, and professional support.</p>
+          
+          <h3 style="margin-bottom: 1rem; color: #1a202c;">Trusted by Thousands</h3>
+          <p class="about-text">Join over 10,000+ verified entrepreneurs who have successfully completed transactions through our platform, representing over $2B in total transaction value.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTINGS PAGE -->
+  <div id="listings" class="page">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Explore Opportunities</h2>
+        <p class="section-subtitle">Discover carefully curated business listings tailored to your interests and investment goals.</p>
+      </div>
+      
+      <div class="listings-container">
+        <div class="listings-filters">
+          <h3 style="margin-bottom: 1rem;">Filter Listings</h3>
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label">Industry</label>
+              <select>
+                <option>All Industries</option>
+                <option>Technology</option>
+                <option>Retail</option>
+                <option>Healthcare</option>
+                <option>Manufacturing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price Range</label>
+              <select>
+                <option>All Prices</option>
+                <option>Under $100K</option>
+                <option>$100K - $500K</option>
+                <option>$500K - $1M</option>
+                <option>$1M+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <select>
+                <option>All Locations</option>
+                <option>United States</option>
+                <option>Canada</option>
+                <option>Europe</option>
+                <option>Asia Pacific</option>
+              </select>
+            </div>
+          </div>
+        </div>
+ <div id="listing-container"></div>
+  <div id="detail-container"></div>
+
+  
+
+        <div class="listings-grid">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
+      authDomain: "buildthebuisnessmarketplace.firebaseapp.com",
+      projectId: "buildthebuisnessmarketplace",
+      storageBucket: "buildthebuisnessmarketplace.appspot.com",
+      messagingSenderId: "925773535893",
+      appId: "1:925773535893:web:6572609247d9851866599c",
+      measurementId: "G-W35X960PF1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let listings = [];
+
+    async function fetchListings() {
+      const querySnapshot = await getDocs(collection(db, "listings"));
+      listings = [];
+      querySnapshot.forEach(doc => {
+        listings.push({ id: doc.id, ...doc.data() });
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id !== null) {
+        showDetail(id);
+      } else {
+        showIndex();
+      }
+    }
+
+   function showIndex() {
+  const container = document.getElementById('listing-container');
+  container.className = 'listings-grid'; // Apply grid styling
+  container.innerHTML = ''; // Clear previous content
+
+  listings.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'listing-card';
+    card.innerHTML = `
+      <div class="listing-title">${item.Name}</div>
+      <div class="listing-price"> $${Number(item.Price).toLocaleString()}</div>
+	         <div class="listing-description"> ${item.Description}</div>
+      <div class="listing-description"> <strong>${item.Industry}</strong></p>
+	  <br>
+<a href="?id=${item.id}" class="btn">More Details</a>
+    `;
+    container.appendChild(card);
+  });
+}
+
+
+    function showDetail(id) {
+      const item = listings.find(x => x.id === id);
+      document.getElementById('listing-container').style.display = 'none';
+      const container = document.getElementById('detail-container');
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div id="back-button" onclick="goBack()">← Back to Listings</div>
+        <div class="detail">
+          <img src="${item.Image}" alt="Business Image" />
+          <h2>${item.Name}</h2>
+          <p><strong>Price:</strong> $${item.Price}</p>
+          <p><strong>Location:</strong> ${item.Location}</p>
+          <p><strong>Industry:</strong> ${item.Industry}</p>
+          <p><strong>Condition:</strong> ${item.Condition}</p>
+          <p><strong>Description:</strong> ${item.Description}</p>
+        </div>
+      `;
+    }
+
+    window.goBack = function () {
+      history.pushState({}, "", window.location.pathname);
+      document.getElementById('detail-container').style.display = 'none';
+      document.getElementById('listing-container').style.display = 'flex';
+      showIndex();
+    };
+
+    fetchListings();
+  </script>
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard" class="page">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Your Dashboard</h2>
+        <p class="section-subtitle">Manage your profile, communications, and listings from one centralized location.</p>
+      </div>
+
+      <div class="dashboard-container">
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3 class="card-title">Account Management</h3>
+            <p class="card-description">Update your profile information and account preferences.</p>
+            
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" placeholder="Enter your display name" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" placeholder="Enter your email address" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" placeholder="Enter your phone number" />
+            </div>
+            
+            <button class="btn">Save Changes</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3 class="card-title">Secure Messaging</h3>
+            <p class="card-description">Communicate safely with potential buyers and sellers.</p>
+            
+            <div class="form-group">
+              <label class="form-label">Recent Conversations</label>
+              <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                <p style="font-weight: 500; margin-bottom: 0.5rem;">John Smith - Tech Startup Inquiry</p>
+                <p style="color: #64748b; font-size: 0.9rem;">Last message: 2 hours ago</p>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">New Message</label>
+              <textarea placeholder="Write your message here..."></textarea>
+            </div>
+            
+            <button class="btn">Send Message</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3 class="card-title">List Your Business</h3>
+            <p class="card-description">Create a professional listing to attract qualified buyers.</p>
+            
+            <div class="form-group">
+              <label class="form-label">Business Name</label>
+              <input type="text" placeholder="Enter business name" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Industry</label>
+              <select>
+                <option>Select Industry</option>
+                <option>Technology</option>
+                <option>Retail</option>
+                <option>Healthcare</option>
+                <option>Manufacturing</option>
+                <option>Services</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Business Description</label>
+              <textarea placeholder="Describe your business, its operations, and key selling points..."></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Asking Price (USD)</label>
+              <input type="number" placeholder="Enter asking price" />
+            </div>
+            
+            <button class="btn">Submit Listing</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3 class="card-title">My Listings</h3>
+            <p class="card-description">View and manage your active business listings.</p>
+            
+            <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="font-weight: 500; margin-bottom: 0.5rem;">Tech Consulting Firm</p>
+              <p style="color: #2563eb; font-weight: 600; margin-bottom: 0.5rem;">$450,000</p>
+              <p style="color: #64748b; font-size: 0.9rem;">Status: Active • Views: 127</p>
+            </div>
+            
+            <button class="btn">Manage Listings</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3 class="card-title">Saved Listings</h3>
+            <p class="card-description">Keep track of businesses you're interested in.</p>
+            
+            <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="font-weight: 500; margin-bottom: 0.5rem;">E-commerce Fashion Brand</p>
+              <p style="color: #2563eb; font-weight: 600; margin-bottom: 0.5rem;">$325,000</p>
+              <p style="color: #64748b; font-size: 0.9rem;">Saved 3 days ago</p>
+            </div>
+            
+            <button class="btn">View All Saved</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3 class="card-title">Analytics & Insights</h3>
+            <p class="card-description">Track your listing performance and market trends.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <p style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">127</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Profile Views</p>
+              </div>
+              <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <p style="font-size: 1.5rem; font-weight: 700; color: #10b981;">23</p>
+                <p style="font-size: 0.9rem; color: #64748b;">Inquiries</p>
+              </div>
+            </div>
+            
+            <button class="btn">View Detailed Analytics</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="login" class="page">
+    <div class="container">
+      <div class="login-container">
+        <div class="login-form">
+          <h2 class="login-title">Welcome Back</h2>
+          
+          <div class="form-group">
+            <label class="form-label">Username or Email</label>
+            <input type="text" placeholder="Enter your username or email" />
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" placeholder="Enter your password" />
+          </div>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+              <input type="checkbox" style="width: auto; margin: 0;">
+              Remember me
+            </label>
+          </div>
+          
+          <button class="btn" style="margin-bottom: 1rem;">Sign In</button>
+          
+          <div style="text-align: center; margin-bottom: 1rem;">
+            <a href="#" style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">Forgot your password?</a>
+          </div>
+          
+          <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #e2e8f0;">
+          
+          <p style="text-align: center; color: #64748b; margin-bottom: 1rem;">
+            Don't have an account?
+          </p>
+          
+          <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom: 0;">
+            Create New Account
+          </button>
+          
+          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+            <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+              Or continue with
+            </p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <button style="padding: 0.75rem; border: 2px solid #e2e8f0; background: white; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+                Google
+              </button>
+              <button style="padding: 0.75rem; border: 2px solid #e2e8f0; background: white; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+                LinkedIn
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 BizMarket. All rights reserved. | Connecting entrepreneurs worldwide.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Page navigation system
+    function showPage(pageId) {
+      // Hide all pages
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Show selected page
+      document.getElementById(pageId).classList.add('active');
+      
+      // Update navigation
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Find and activate the correct nav link
+      const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+      if (activeLink && activeLink.classList.contains('nav-link')) {
+        activeLink.classList.add('active');
+      }
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Add scroll effect to header
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.style.background = 'rgba(255, 255, 255, 0.98)';
+        header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+      } else {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.boxShadow = 'none';
+      }
+    });
+
+    // Form validation and interaction
+    document.querySelectorAll('input, textarea, select').forEach(input => {
+      input.addEventListener('focus', function() {
+        this.style.transform = 'translateY(-1px)';
+        this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+      });
+      
+      input.addEventListener('blur', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    // Button hover effects
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('mouseenter', function() {
+        if (!this.style.background.includes('white')) {
+          this.style.transform = 'translateY(-2px)';
+        }
+      });
+      
+      button.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Simulate form submissions
+    document.querySelectorAll('.btn').forEach(btn => {
+      if (btn.textContent.includes('Submit') || btn.textContent.includes('Send') || btn.textContent.includes('Save')) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const originalText = this.textContent;
+          this.textContent = 'Processing...';
+          this.disabled = true;
+          
+          setTimeout(() => {
+            this.textContent = 'Success!';
+            this.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
+            setTimeout(() => {
+              this.textContent = originalText;
+              this.style.background = 'linear-gradient(135deg, #2563eb, #1d4ed8)';
+              this.disabled = false;
+            }, 1500);
+          }, 1000);
+        });
+      }
+    });
+
+    // Social login buttons hover effect
+    document.querySelectorAll('button[style*="border: 2px solid"]').forEach(btn => {
+      btn.addEventListener('mouseenter', function() {
+        this.style.borderColor = '#2563eb';
+        this.style.color = '#2563eb';
+        this.style.transform = 'translateY(-1px)';
+      });
+      
+      btn.addEventListener('mouseleave', function() {
+        this.style.borderColor = '#e2e8f0';
+        this.style.color = '#374151';
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set home as default active page
+      showPage('home');
+    });
+  </script>
+</body>
+</html>

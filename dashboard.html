@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - BizMarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo" onclick="window.location.href='index.html'">BizMarket</div>
+      <nav>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="listings.html" class="nav-link">Browse</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="login.html" class="btn-primary">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Your Dashboard</h2>
+      <p class="section-subtitle">Manage your profile, communications, and listings from one centralized location.</p>
+    </div>
+
+    <div class="dashboard-container">
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3 class="card-title">Account Management</h3>
+          <p class="card-description">Update your profile information and account preferences.</p>
+          
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input type="text" placeholder="Enter your display name" />
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" placeholder="Enter your email address" />
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" placeholder="Enter your phone number" />
+          </div>
+          
+          <button class="btn">Save Changes</button>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title">Secure Messaging</h3>
+          <p class="card-description">Communicate safely with potential buyers and sellers.</p>
+          
+          <div class="form-group">
+            <label class="form-label">Recent Conversations</label>
+            <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="font-weight: 500; margin-bottom: 0.5rem;">John Smith - Tech Startup Inquiry</p>
+              <p style="color: #64748b; font-size: 0.9rem;">Last message: 2 hours ago</p>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">New Message</label>
+            <textarea placeholder="Write your message here..."></textarea>
+          </div>
+          
+          <button class="btn">Send Message</button>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title">List Your Business</h3>
+          <p class="card-description">Create a professional listing to attract qualified buyers.</p>
+          
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input type="text" placeholder="Enter business name" />
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Industry</label>
+            <select>
+              <option>Select Industry</option>
+              <option>Technology</option>
+              <option>Retail</option>
+              <option>Healthcare</option>
+              <option>Manufacturing</option>
+              <option>Services</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Business Description</label>
+            <textarea placeholder="Describe your business, its operations, and key selling points..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Asking Price (USD)</label>
+            <input type="number" placeholder="Enter asking price" />
+          </div>
+          
+          <button class="btn">Submit Listing</button>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title">My Listings</h3>
+          <p class="card-description">View and manage your active business listings.</p>
+          
+          <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+            <p style="font-weight: 500; margin-bottom: 0.5rem;">Tech Consulting Firm</p>
+            <p style="color: #2563eb; font-weight: 600; margin-bottom: 0.5rem;">$450,000</p>
+            <p style="color: #64748b; font-size: 0.9rem;">Status: Active • Views: 127</p>
+          </div>
+          
+          <button class="btn">Manage Listings</button>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title">Saved Listings</h3>
+          <p class="card-description">Keep track of businesses you're interested in.</p>
+          
+          <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+            <p style="font-weight: 500; margin-bottom: 0.5rem;">E-commerce Fashion Brand</p>
+            <p style="color: #2563eb; font-weight: 600; margin-bottom: 0.5rem;">$325,000</p>
+            <p style="color: #64748b; font-size: 0.9rem;">Saved 3 days ago</p>
+          </div>
+          
+          <button class="btn">View All Saved</button>
+        </div>
+
+        <div class="dashboard-card">
+          <h3 class="card-title">Analytics & Insights</h3>
+          <p class="card-description">Track your listing performance and market trends.</p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+              <p style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">127</p>
+              <p style="font-size: 0.9rem; color: #64748b;">Profile Views</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+              <p style="font-size: 1.5rem; font-weight: 700; color: #10b981;">23</p>
+              <p style="font-size: 0.9rem; color: #64748b;">Inquiries</p>
+            </div>
+          </div>
+          
+          <button class="btn">View Detailed Analytics</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 BizMarket. All rights reserved. | Connecting entrepreneurs worldwide.</p>
+    </div>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Listings - BizMarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo" onclick="window.location.href='index.html'">BizMarket</div>
+      <nav>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="listings.html" class="nav-link active">Browse</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="login.html" class="btn-primary">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Explore Opportunities</h2>
+      <p class="section-subtitle">Discover carefully curated business listings tailored to your interests and investment goals.</p>
+    </div>
+    
+    <div class="listings-container">
+      <div class="listings-filters">
+        <h3 style="margin-bottom: 1rem;">Filter Listings</h3>
+        <div class="filter-row">
+          <div class="form-group">
+            <label class="form-label">Industry</label>
+            <select>
+              <option>All Industries</option>
+              <option>Technology</option>
+              <option>Retail</option>
+              <option>Healthcare</option>
+              <option>Manufacturing</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price Range</label>
+            <select>
+              <option>All Prices</option>
+              <option>Under $100K</option>
+              <option>$100K - $500K</option>
+              <option>$500K - $1M</option>
+              <option>$1M+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <select>
+              <option>All Locations</option>
+              <option>United States</option>
+              <option>Canada</option>
+              <option>Europe</option>
+              <option>Asia Pacific</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="listing-container"></div>
+      <div id="detail-container"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 BizMarket. All rights reserved. | Connecting entrepreneurs worldwide.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
+      authDomain: "buildthebuisnessmarketplace.firebaseapp.com",
+      projectId: "buildthebuisnessmarketplace",
+      storageBucket: "buildthebuisnessmarketplace.appspot.com",
+      messagingSenderId: "925773535893",
+      appId: "1:925773535893:web:6572609247d9851866599c",
+      measurementId: "G-W35X960PF1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let listings = [];
+
+    async function fetchListings() {
+      const querySnapshot = await getDocs(collection(db, "listings"));
+      listings = [];
+      querySnapshot.forEach(doc => {
+        listings.push({ id: doc.id, ...doc.data() });
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (id !== null) {
+        showDetail(id);
+      } else {
+        showIndex();
+      }
+    }
+
+    function showIndex() {
+      const container = document.getElementById('listing-container');
+      container.className = 'listings-grid';
+      container.innerHTML = '';
+
+      listings.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'listing-card';
+        card.innerHTML = `
+          <div class="listing-title">${item.Name}</div>
+          <div class="listing-price"> $${Number(item.Price).toLocaleString()}</div>
+          <div class="listing-description"> ${item.Description}</div>
+          <div class="listing-description"> <strong>${item.Industry}</strong></div>
+          <br>
+          <a href="?id=${item.id}" class="btn">More Details</a>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function showDetail(id) {
+      const item = listings.find(x => x.id === id);
+      document.getElementById('listing-container').style.display = 'none';
+      const container = document.getElementById('detail-container');
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div id="back-button" onclick="goBack()">← Back to Listings</div>
+        <div class="detail">
+          <img src="${item.Image}" alt="Business Image" />
+          <h2>${item.Name}</h2>
+          <p><strong>Price:</strong> $${item.Price}</p>
+          <p><strong>Location:</strong> ${item.Location}</p>
+          <p><strong>Industry:</strong> ${item.Industry}</p>
+          <p><strong>Condition:</strong> ${item.Condition}</p>
+          <p><strong>Description:</strong> ${item.Description}</p>
+        </div>
+      `;
+    }
+
+    window.goBack = function () {
+      history.pushState({}, "", window.location.pathname);
+      document.getElementById('detail-container').style.display = 'none';
+      document.getElementById('listing-container').style.display = 'flex';
+      showIndex();
+    };
+
+    fetchListings();
+  </script>
+  <script src="scripts.js"></script>
+</body>
+</html>
