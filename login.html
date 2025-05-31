@@ -6,6 +6,15 @@
   <title>Login - BizMarket</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+    .hidden { display: none; }
+    input, button { display: block; width: 100%; padding: 8px; margin: 6px 0; }
+    .listing-card { background: #fff; padding: 10px; margin: 10px 0; border-radius: 6px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    img { max-width: 200px; display: block; margin-top: 5px; }
+    #chat div { margin-bottom: 6px; }
+    .flex { display: flex; justify-content: space-between; align-items: center; }
+  </style>
 </head>
 <body>
   <header>
@@ -21,20 +30,14 @@
     </div>
   </header>
 
-  <div class="container">
+  <!-- Auth Section -->
+  <div class="container" id="auth-section">
     <div class="login-container">
       <div class="login-form">
         <h2 class="login-title">Welcome Back</h2>
 
-        <div class="form-group">
-          <label class="form-label">Username or Email</label>
-          <input type="text" placeholder="Enter your username or email" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" placeholder="Enter your password" />
-        </div>
+        <input id="login-email" type="email" placeholder="Enter your username or email" />
+        <input id="login-password" type="password" placeholder="Enter your password" />
 
         <div class="form-group">
           <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
@@ -43,7 +46,7 @@
           </label>
         </div>
 
-        <button class="btn" style="margin-bottom: 1rem;">Sign In</button>
+        <button class="btn" style="margin-bottom: 1rem;" onclick="login()">Sign In</button>
 
         <div style="text-align: center; margin-bottom: 1rem;">
           <a href="#" style="color: #2563eb; text-decoration: none; font-size: 0.9rem;">Forgot your password?</a>
@@ -55,7 +58,6 @@
           Don't have an account?
         </p>
 
-        <!-- Updated button -->
         <a href="signup.html" class="btn"
            style="
              background: linear-gradient(135deg, #10b981, #059669);
@@ -89,12 +91,143 @@
     </div>
   </div>
 
+  <!-- App Section -->
+  <div id="app-section" class="hidden">
+    <div class="flex">
+      <h2>Marketplace</h2>
+      <div>
+        <span id="user-info"></span>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <input type="file" id="imageInput">
+    <button onclick="uploadImage()">Upload Image</button>
+    <div id="upload-status"></div>
+
+    <h3>Listings</h3>
+    <div id="listing-container"></div>
+
+    <h3>Chat</h3>
+    <div id="chat"></div>
+    <input id="chat-input" placeholder="Say something...">
+    <button onclick="sendChat()">Send</button>
+  </div>
+
   <footer>
     <div class="container">
       <p>&copy; 2025 BizMarket. All rights reserved. | Connecting entrepreneurs worldwide.</p>
     </div>
   </footer>
 
-  <script src="scripts.js"></script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import {
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import {
+      getFirestore, collection, getDocs, addDoc, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import {
+      getStorage, ref, uploadBytes, getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzGs2cQRjE7z3UZ6UQCMtvqaI1tXooFNs",
+      authDomain: "buildthebuisnessmarketplace.firebaseapp.com",
+      projectId: "buildthebuisnessmarketplace",
+      storageBucket: "buildthebuisnessmarketplace.appspot.com",
+      messagingSenderId: "925773535893",
+      appId: "1:925773535893:web:6572609247d9851866599c",
+      measurementId: "G-W35X960PF1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const authSection = document.getElementById("auth-section");
+    const appSection = document.getElementById("app-section");
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        document.getElementById("user-info").textContent = `Logged in as ${user.email}`;
+        authSection.classList.add("hidden");
+        appSection.classList.remove("hidden");
+        loadListings();
+        loadChat();
+      } else {
+        authSection.classList.remove("hidden");
+        appSection.classList.add("hidden");
+      }
+    });
+
+    window.login = function () {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .catch(error => alert(error.message));
+    }
+
+    window.logout = function () {
+      signOut(auth).then(() => location.reload());
+    }
+
+    async function loadListings() {
+      const snapshot = await getDocs(collection(db, "listings"));
+      const container = document.getElementById("listing-container");
+      container.innerHTML = '';
+      snapshot.forEach(doc => {
+        const item = doc.data();
+        const div = document.createElement("div");
+        div.className = "listing-card";
+        div.innerHTML = `
+          <h4>${item.Name}</h4>
+          <p><strong>Price:</strong> $${item.Price}</p>
+          <p><strong>Industry:</strong> ${item.Industry}</p>
+          <p>${item.Description}</p>
+          ${item.Image ? `<img src="${item.Image}">` : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.uploadImage = async function () {
+      const file = document.getElementById("imageInput").files[0];
+      if (!file) return alert("No file selected.");
+      const storageRef = ref(storage, 'uploads/' + file.name);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      document.getElementById("upload-status").textContent = "Uploaded: " + url;
+    }
+
+    window.sendChat = async function () {
+      const input = document.getElementById("chat-input");
+      const message = input.value.trim();
+      if (!message) return;
+      await addDoc(collection(db, "chat"), {
+        user: auth.currentUser.email,
+        message: message,
+        timestamp: new Date()
+      });
+      input.value = "";
+    }
+
+    function loadChat() {
+      const chatBox = document.getElementById("chat");
+      onSnapshot(collection(db, "chat"), snapshot => {
+        chatBox.innerHTML = "";
+        snapshot.docs.forEach(doc => {
+          const msg = doc.data();
+          const div = document.createElement("div");
+          div.textContent = `${msg.user}: ${msg.message}`;
+          chatBox.appendChild(div);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
